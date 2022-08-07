@@ -74,33 +74,48 @@ const linkModules = ({ modulesDir, themeRoot }: ResolvedVitePluginShopifyModules
   const rootPath = path.resolve(themeRoot)
   const sectionsDir = path.resolve(rootPath, './sections')
   const snippetsDir = path.resolve(rootPath, './snippets')
+  const templatesDir = path.resolve(rootPath, './templates')
 
   if (existsSync(modulesDir)) {
     fs.readdir(modulesDir)
       .then(
         async (modules: string[]) => await Promise.all(modules.flatMap((module) => [
-          setupSectionSymlink(module, { modulesDir, sectionsDir }),
-          setupSnippetSymlink(module, { modulesDir, snippetsDir })
+          setupModuleSymlink(module, { modulesDir, sectionsDir, snippetsDir, templatesDir })
         ])),
         (err) => { throw err }
       )
   }
 }
 
-// Set up symlink for module's liquid section file
-const setupSectionSymlink = async (moduleName: string, pathConfig: { modulesDir: string, sectionsDir: string }): Promise<void> => {
-  const moduleSectionPath = path.join(pathConfig.modulesDir, `${moduleName}/${moduleName}.section.liquid`)
-  const themeSectionPath = path.join(pathConfig.sectionsDir, `${moduleName}.liquid`)
+// Set up symlink for module's liqui files
+const setupModuleSymlink = async (moduleName: string, pathConfig: { modulesDir: string, sectionsDir: string, snippetsDir: string, templatesDir: string }): Promise<void> => {
+  const moduleDir = path.join(pathConfig.modulesDir, moduleName)
+  const liquidFiles = await glob(`${moduleDir}/*.liquid}`, { onlyFiles: true })
+  const sectionFileRegex = /\.section\.liquid$/
+  const templateFileRegex = /\.template\.liquid$/
 
-  return await setupSymlink(moduleSectionPath, themeSectionPath)
-}
+  for (const liquidFile of liquidFiles) {
+    const liquidFilePath = path.join(moduleDir, liquidFile)
 
-// Set up symlink for module's liquid snippet file
-const setupSnippetSymlink = async (moduleName: string, pathConfig: { modulesDir: string, snippetsDir: string }): Promise<void> => {
-  const moduleSnippetPath = path.join(pathConfig.modulesDir, `${moduleName}/${moduleName}.snippet.liquid`)
-  const themeSnippetPath = path.join(pathConfig.snippetsDir, `${moduleName}.liquid`)
+    // Check if file is section file
+    if (liquidFile.match(sectionFileRegex)) {
+      const themeSectionPath = path.join(pathConfig.sectionsDir, liquidFile.replace(sectionFileRegex, ''))
 
-  return await setupSymlink(moduleSnippetPath, themeSnippetPath)
+      return await setupSymlink(liquidFilePath, themeSectionPath)
+    }
+
+    // Check if file is template file
+    if (liquidFile.match(templateFileRegex)) {
+      const themeTemplatePath = path.join(pathConfig.sectionsDir, liquidFile.replace(templateFileRegex, ''))
+
+      return await setupSymlink(liquidFilePath, themeTemplatePath)
+    }
+
+    // Otherwise, file is snippet file
+    const themeSnippetPath = path.join(pathConfig.snippetsDir, liquidFile)
+
+    return await setupSymlink(liquidFilePath, themeSnippetPath)
+  }
 }
 
 // Move liquid file from module path to theme path and generate symbolic link
