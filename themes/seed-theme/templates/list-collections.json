@@ -17,9 +17,14 @@
       "type": "collection-grid",
       "settings": {
         "collections": [
-          "all-products",
-          "cool-products",
-          "another-collection"
+          "clear-all-day",
+          "shoes",
+          "shirts",
+          "pants",
+          "dresses",
+          "denim",
+          "outerwear",
+          "accessories"
         ],
         "sort": "manual"
       }

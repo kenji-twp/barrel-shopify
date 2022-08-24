@@ -1,13 +1,17 @@
 import DynamicSectionElement from '@/scripts/dynamic-section-element.js'
 
 class SiteHeader extends DynamicSectionElement {
-  toggleSearchBar () {
+  onClickSearch () {
     const searchContainer = this.querySelector('[data-search]')
 
-    if (searchContainer.classList.contains('hidden')) {
-      searchContainer.classList.remove('hidden')
+    if (searchContainer) {
+      if (searchContainer.classList.contains('hidden')) {
+        searchContainer.classList.remove('hidden')
+      } else {
+        searchContainer.classList.add('hidden')
+      }
     } else {
-      searchContainer.classList.add('hidden')
+      document.querySelector('input#Search').focus()
     }
   }
 }

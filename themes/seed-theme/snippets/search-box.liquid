@@ -1,0 +1,36 @@
+<search-box>
+  <form action="{{ routes.search_url }}" class="max-w-7xl mx-auto px-responsive flex flex-col">
+    <input
+      class="flex-1 mr-4"
+      id="Search"
+      type="search"
+      name="q"
+      value="{{ search.terms | escape }}"
+      role="combobox"
+      aria-expanded="false"
+      aria-owns="search-suggestions-results-list"
+      aria-controls="search-suggestions-results-list"
+      aria-haspopup="listbox"
+      aria-autocomplete="list"
+      autocorrect="off"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+    />
+    <input name="options[prefix]" type="hidden" value="last">
+    <div id="search-suggestions" tabindex="-1"></div>
+    {% assign types = 'product|article|page' | split: '|' %}
+    {% for type in types %}
+      {% liquid
+        assign checked = false
+        if search.types contains type
+          assign checked = true
+        endif
+      %}
+      <label><input type="radio" name="type" value="{{ type }}" {% if checked %}checked{% endif %}>
+      {{ type }}<span data-slot="search-type-count-{{ type }}">{% if checked %} ({{ search.results_count }}){% endif %}</span>
+    </label>
+    {% endfor %}
+  </form>
+</search-box>
+{% render 'vite-tag' with '@modules/search-box' %}

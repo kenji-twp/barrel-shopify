@@ -1,0 +1,115 @@
+<div id="search-suggestions-results-list">
+  {% if predictive_search.resources.products.size > 0 %}
+    <h3 id="search-suggestions-products">Products</h3>
+    <ul role="listbox" aria-labelledby="search-suggestions-products">
+      {% for product in predictive_search.resources.products %}
+        <li role="option">
+          <a href="{{ product.url }}" tabindex="-1">
+            {{ product.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if predictive_search.resources.collections.size > 0 %}
+    <h3 id="search-suggestions-collections">Collections</h3>
+    <ul role="listbox" aria-labelledby="search-suggestions-collections">
+      {% for collection in predictive_search.resources.collections %}
+        <li role="option">
+          <a href="{{ collection.url }}" tabindex="-1">
+            {{ collection.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if predictive_search.resources.pages.size > 0 %}
+    <h3 id="search-suggestions-pages">Pages</h3>
+    <ul role="listbox" aria-labelledby="search-suggestions-pages">
+      {% for page in predictive_search.resources.pages %}
+        <li role="option">
+          <a href="{{ page.url }}" tabindex="-1">
+            {{ page.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if predictive_search.resources.articles.size > 0 %}
+    <h3 id="search-suggestions-articles">Articles</h3>
+    <ul role="listbox" aria-labelledby="search-suggestions-articles">
+      {% for article in predictive_search.resources.articles %}
+        <li role="option">
+          <a href="{{ article.url }}" tabindex="-1">
+            {{ article.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <button tabindex="-1">Search for “{{ predictive_search.terms }}”</button>
+</div>
+
+{% comment %} {%- if predictive_search.performed -%}
+  <div id="search-suggestions-results">
+    {%- if predictive_search.resources.products.size > 0 -%}
+      <h3 id="search-suggestions-products" class="search-suggestions__heading">
+        Products
+      </h3>
+    {%- endif -%}
+    <ul id="search-suggestions-products-list" class="search-suggestions__results-list" role="listbox" aria-labelledby="search-suggestions-products">
+      {%- for product in predictive_search.resources.products -%}
+        <li class="search-suggestions__list-item" role="option">
+          <a href="{{ product.url }}" class="search-suggestions__item" tabindex="-1">
+            {%- if product.featured_media != blank -%}
+              <img class="search-suggestions__image"
+                src="{{ product.featured_media | img_url: '150x' }}"
+                alt="{{ product.featured_media.alt }}"
+                width="50"
+                height="{{ 50 | divided_by: product.featured_media.preview_image.aspect_ratio }}"
+              >
+            {%- endif -%}
+            <div class="search-suggestions__item-content">
+              {%- if settings.predictive_search_show_vendor -%}
+                <span class="visually-hidden">Vendor</span>
+                <div class="search-suggestions__item-vendor">{{ product.vendor }}</div>
+              {%- endif -%}
+              <span class="search-suggestions__item-heading">{{ product.title }}</span>
+              {%- if settings.predictive_search_show_price -%}
+                {% comment %}Render price{% endcomment %}
+              {%- endif -%}
+            </div>
+          </a>
+        </li>
+      {%- endfor -%}
+      {%- if predictive_search.resources.collections.size > 0 -%}
+        <h3 id="search-suggestions-collections" class="search-suggestions__heading">
+          Collections
+        </h3>
+      {%- endif -%}
+      <ul id="search-suggestions-collections-list" class="search-suggestions__results-list" role="listbox" aria-labelledby="search-suggestions-collections">
+        {%- for collection in predictive_search.resources.collections -%}
+          <li class="search-suggestions__list-item" role="option">
+            <a href="{{ collection.url }}" class="search-suggestions__item" tabindex="-1">
+              {%- if collection.featured_media != blank -%}
+                <img class="search-suggestions__image"
+                  src="{{ collection.featured_media | img_url: '150x' }}"
+                  alt="{{ collection.featured_media.alt }}"
+                  width="50"
+                  height="{{ 50 | divided_by: collection.featured_media.preview_image.aspect_ratio }}"
+                >
+              {%- endif -%}
+              <div class="search-suggestions__item-content">
+                <span class="search-suggestions__item-heading">{{ collection.title }}</span>
+              </div>
+            </a>
+          </li>
+        {%- endfor -%}
+      <li class="search-suggestions__list-item" role="option">
+        <button class="search-suggestions__item" tabindex="-1">
+          Search for “{{ predictive_search.terms }}”
+        </button>
+      </li>
+    </ul>
+  </div>
+{%- endif -%} {% endcomment %}

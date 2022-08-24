@@ -1,0 +1,30 @@
+<div class="py-4">
+  {% render 'search-box' %}
+</div>
+{% paginate search.results by 24 %}
+  {% for item in search.results %}
+    {% liquid
+      assign title = item.title | truncate: 50 | escape
+      assign url = item.url | truncate: 50 | escape
+    %}
+    <div>
+      {% case item.object_type %}
+        {% when 'product' %}
+          <p>Product</p>
+          {% render 'responsive-image', image: item.featured_image, class: 'relative w-[150px] h-[150px]', max_width: 150, object_fit: 'contain' %}
+          <p><a href="{{ item.url }}">{{ item.title | truncate: 50 | escape }}</a></p>
+          {% comment %} <p>{{ item.content | highlight: search.terms }}</p> {% endcomment %}
+        {% when 'article' %}
+          <p>Article</p>
+          {% render 'responsive-image', image: item.featured_image, class: 'relative w-[150px] h-[150px]', max_width: 150, object_fit: 'contain' %}
+          <p><a href="{{ item.url }}">{{ item.title | truncate: 50 | escape }}</a></p>
+          {% comment %} <p>{{ item.content | highlight: search.terms }}</p> {% endcomment %}
+        {% when 'page' %}
+          <p>Page</p>
+          {% render 'responsive-image', image: item.featured_image, class: 'relative w-[150px] h-[150px]', max_width: 150, object_fit: 'contain' %}
+          <p><a href="{{ item.url }}">{{ item.title | truncate: 50 | escape }}</a></p>
+          {% comment %} <p>{{ item.content | highlight: search.terms | truncate: 50 }}</p> {% endcomment %}
+      {% endcase %}
+    </div>
+  {% endfor %}
+{% endpaginate %}
